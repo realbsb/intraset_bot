@@ -1,0 +1,60 @@
+[project]
+name = "intraset-bot"
+version = "0.1.0"
+description = "Telegram-бот для обслуживания интрасети"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram>=3.15.0,<4",
+    "aiohttp>=3.10",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["handlers", "services"]
+
+# ---------- Ruff ----------
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["."]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "SIM",  # flake8-simplify
+    "RUF",  # ruff-specific
+    "BLE",  # flake8-blind-except
+]
+ignore = [
+    "RUF001",  # кириллица в строках — норма для нашего проекта
+    "RUF002",  # то же в докстрингах
+    "RUF003",  # то же в комментариях
+]
+
+[tool.ruff.lint.per-file-ignores]
+# В bot.py ловим любые исключения при отправке уведомлений — это ок.
+"bot.py" = ["BLE001"]
+# В queue.py то же самое для воркеров.
+"services/queue.py" = ["BLE001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "logger", "handlers", "services"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
